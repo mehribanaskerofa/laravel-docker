@@ -1,0 +1,31 @@
+services:
+  laravel:
+    build:
+      context: .
+    container_name: laravel-app
+    ports:
+      - "8080:8080"   # Laravel tətbiqini 8080 portunda göstərəcəyik
+    volumes:
+      - .:/var/www/html  # Layihə fayllarını konteynerə kopyalayır
+    environment:
+      - DB_HOST=mysql     # MySQL konteyneri ilə əlaqə qurulacaq
+      - DB_PORT=3306      # MySQL portu
+      - DB_DATABASE=laravel  # Verilənlər bazası adı
+      - DB_USERNAME=root  # MySQL istifadəçi adı
+      - DB_PASSWORD=root  # MySQL şifrəsi
+    depends_on:
+      - mysql  # Laravel konteyneri MySQL konteynerinə bağlıdır
+
+  mysql:
+    image: mysql:5.7   # MySQL image-dən istifadə edirik
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root  # MySQL kök şifrəsi
+      MYSQL_DATABASE: laravel    # Laravel verilənlər bazası
+    ports:
+      - "3306:3306"  # MySQL portu
+    volumes:
+      - mysql_data:/var/lib/mysql  # MySQL verilənlər bazasını saxlamaq üçün həcmi
+
+volumes:
+  mysql_data:
